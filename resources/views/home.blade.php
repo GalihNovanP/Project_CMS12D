@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>DISTRO POINTSURF</title>
+    <title>WARTEG ONLINE</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -98,8 +98,33 @@
                 <div class="collapse" id="base">
                   <ul class="nav nav-collapse">
                     <li>
-                        <a href="{{ route('produk.index') }}">
+                      <a href="{{ route('pelanggan.index') }}">
+                        <span class="sub-item">Pelanggan</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{{ route('produk.index') }}">
                         <span class="sub-item">Produk</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{{ route('order.index') }}">
+                        <span class="sub-item">Order</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{{ route('detail_order.index') }}">
+                        <span class="sub-item">Detail Order</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{{ route('karyawan.index') }}">
+                        <span class="sub-item">Karyawan</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{{ route('pembayaran.index') }}">
+                        <span class="sub-item">Pembayaran</span>
                       </a>
                     </li>
                   </ul>

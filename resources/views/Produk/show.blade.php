@@ -3,15 +3,18 @@
 @section('title', 'Detail Produk')
 
 @section('content')
-    <h1>Detail Produk</h1>
-    
-    <div style="line-height: 1.8; margin-bottom: 20px;">
-        <p><strong>Nama:</strong> {{ $Produk['Nama'] }}</p>
-        <p><strong>Harga:</strong> {{ $Produk['Harga'] }}</p>
-        <p><strong>Kategori:</strong> {{ $Produk['Kategori'] }}</p>
-    </div>
-    
-    <a href="/produk/{{ $Produk['Id_Produk'] }}/edit" style="margin-right: 10px;">✏️ Edit</a>
-    <a href="/produk/{{ $Produk['Id_Produk'] }}/delete" style="margin-right: 10px;">🗑️ Hapus</a>
-    <a href="/produk">← Kembali ke daftar</a>
+    <h2>Detail Produk</h2>
+
+    <p><strong>Nama Produk:</strong> {{ $produk->nama_produk }}</p>
+    <p><strong>Harga:</strong> Rp{{ number_format($produk->harga, 2, ',', '.') }}</p>
+    <p><strong>Stok:</strong> {{ $produk->stok }}</p>
+
+    <br>
+
+    <a href="{{ route('produk.edit', $produk->id) }}">✏ Edit</a> |
+    <a href="{{ route('produk.delete', $produk->id) }}">🗑 Hapus</a>
+
+    <br><br>
+
+    <a href="{{ route('produk.index') }}">← Kembali ke daftar</a>
 @endsection
