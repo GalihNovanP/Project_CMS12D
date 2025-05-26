@@ -19,11 +19,11 @@ class Produk extends Model
 
     public static function getAll()
     {
-        return Pelanggan::all();
+        return Produk::all();
     }
 
     public static function find($id)
     {
-        return Pelanggan::where('id', $id)->first();
+        return Produk::where('id', $id)->first();
     }
 }
