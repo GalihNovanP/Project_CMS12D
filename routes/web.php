@@ -9,6 +9,11 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PembayaranController;
 
 
+Route::get('/pendaftaran-ktp', function() {
+    return 'Selamat datang di halaman Pendaftaran KTP Online!';
+})->middleware('check.age');
+
+
 Route::get('/', function () {
     return view('home');
 });
@@ -36,3 +41,5 @@ Route::get('karyawan/{id}/delete', [KaryawanController::class, 'delete'])->name(
 // Route untuk pembayaran
 Route::resource('pembayaran', PembayaranController::class);
 Route::get('pembayaran/{id}/delete', [PembayaranController::class, 'delete'])->name('pembayaran.delete');
+
+
