@@ -7,6 +7,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\DetailOrderController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\ImageController;
+
 
 
 Route::get('/pendaftaran-ktp', function() {
@@ -41,5 +43,11 @@ Route::get('karyawan/{id}/delete', [KaryawanController::class, 'delete'])->name(
 // Route untuk pembayaran
 Route::resource('pembayaran', PembayaranController::class);
 Route::get('pembayaran/{id}/delete', [PembayaranController::class, 'delete'])->name('pembayaran.delete');
+
+// Route untuk upload gambar
+Route::get('/upload', [ImageController::class, 'create']);
+Route::post('/upload', [ImageController::class, 'store'])->name('image.upload');
+Route::delete('/upload/{id}', [ImageController::class, 'destroy'])->name('image.delete');
+
 
 
