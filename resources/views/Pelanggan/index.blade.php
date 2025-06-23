@@ -3,18 +3,24 @@
 @section('title', 'Daftar Pelanggan')
 
 @section('content')
-    <h1>Daftar Pelanggan</h1>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">Daftar Pelanggan</h1>
+        <a href="/" class="btn btn-outline-primary">Home</a>
+    </div>
 
-    <ul>
+    <ul class="list-group mb-4">
         @forelse($pelanggans as $p)
-            <li>
-                <a href="/pelanggan/{{ $p['id'] }}">{{ $p['nama'] }}</a>
+            <li class="list-group-item">
+                <a href="/pelanggan/{{ $p->id }}" class="text-decoration-none">
+                    {{ $p->nama }}
+                </a>
             </li>
         @empty
-            <p>Tidak ada pelanggan.</p>
+            <li class="list-group-item text-muted">Tidak ada pelanggan.</li>
         @endforelse
     </ul>
 
-    <a href="/pelanggan/create" style="display: inline-block; margin-top: 20px;">+ Tambah Pelanggan</a>
-    <br><br>
+    <a href="/pelanggan/create" class="btn btn-primary">+ Tambah Pelanggan</a>
+</div>
 @endsection

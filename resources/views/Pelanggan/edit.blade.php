@@ -3,24 +3,30 @@
 @section('title', 'Edit Pelanggan')
 
 @section('content')
-    <h1>Edit Pelanggan</h1>
+<div class="container mt-5">
+    <h1 class="mb-4">Edit Pelanggan</h1>
 
     <form method="POST" action="{{ route('pelanggan.update', $pelanggan->id) }}">
         @csrf
         @method('PUT')
 
-        <label>Nama:</label><br>
-        <input type="text" name="nama" value="{{ $pelanggan->nama }}"><br><br>
+        <div class="mb-3">
+            <label for="nama" class="form-label">Nama</label>
+            <input type="text" class="form-control" id="nama" name="nama" value="{{ $pelanggan->nama }}" required>
+        </div>
 
-        <label>Alamat:</label><br>
-        <input type="text" name="alamat" value="{{ $pelanggan->alamat }}"><br><br>
+        <div class="mb-3">
+            <label for="alamat" class="form-label">Alamat</label>
+            <input type="text" class="form-control" id="alamat" name="alamat" value="{{ $pelanggan->alamat }}" required>
+        </div>
 
-        <label>Email:</label><br>
-        <input type="email" name="email" value="{{ $pelanggan->email }}"><br><br>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ $pelanggan->email }}" required>
+        </div>
 
-        <button style="margin-top: 10px;">Simpan</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <a href="{{ route('pelanggan.show', $pelanggan->id) }}" class="btn btn-secondary ms-2">← Kembali ke detail</a>
     </form>
-
-    <br>
-    <a href="{{ route('pelanggan.show', $pelanggan->id) }}">← Kembali ke detail</a>
+</div>
 @endsection

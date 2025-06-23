@@ -3,15 +3,29 @@
 @section('title', 'Tambah Pelanggan')
 
 @section('content')
-    <h2 style="margin-bottom: 16px;">Tambah Pelanggan Baru</h2>
+<div class="container mt-5">
+    <h2 class="mb-4">Tambah Pelanggan Baru</h2>
 
-    <form method="POST" action="{{ route('pelanggan.store') }}" style="line-height: 2;">
+    <form method="POST" action="{{ route('pelanggan.store') }}">
         @csrf
-        <label>Nama: <input type="text" name="nama" required></label><br>
-        <label>Alamat: <input type="text" name="alamat" required></label><br>
-        <label>Email: <input type="email" name="email" required></label><br>
-        <button type="submit" style="margin-top: 10px;">Tambah</button>
-    </form>
 
-    <a href="{{ route('pelanggan.index') }}" style="display: inline-block; margin-top: 20px;">← Kembali ke daftar</a>
+        <div class="mb-3">
+            <label for="nama" class="form-label">Nama</label>
+            <input type="text" class="form-control" id="nama" name="nama" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="alamat" class="form-label">Alamat</label>
+            <input type="text" class="form-control" id="alamat" name="alamat" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Tambah</button>
+        <a href="{{ route('pelanggan.index') }}" class="btn btn-secondary ms-2">← Kembali ke daftar</a>
+    </form>
+</div>
 @endsection

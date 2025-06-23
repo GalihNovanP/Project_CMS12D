@@ -3,18 +3,31 @@
 @section('title', 'Daftar Produk')
 
 @section('content')
-    <h1>Daftar Produk</h1>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">Daftar Produk</h1>
+        <a href="{{ route('produk.create') }}" class="btn btn-primary">+ Tambah Produk</a>
+    </div>
+    @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+@endif
 
-    <ul>
-        @forelse($produks as $p)
-            <li>
-                <a href="/produk/{{ $p['id'] }}">{{ $p['nama_produk'] }}</a>
-            </li>
-        @empty
-            <p>Tidak ada produk.</p>
-        @endforelse
-    </ul>
+@if(session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
+@endif
 
-    <a href="/produk/create" style="display: inline-block; margin-top: 20px;">+ Tambah Produk</a>
-    <br><br>
+    @if($produks->isEmpty())
+        <div class="alert alert-info">Tidak ada produk.</div>
+    @else
+        <ul class="list-group">
+            @foreach($produks as $p)
+                <li class="list-group-item">
+                    <a href="{{ route('produk.show', $p->id) }}" class="text-decoration-none">
+                        {{ $p->nama_produk }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    @endif
+</div>
 @endsection
