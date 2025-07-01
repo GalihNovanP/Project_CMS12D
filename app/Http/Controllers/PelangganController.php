@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pelanggan;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
 
 class PelangganController extends Controller
 {
@@ -35,8 +36,12 @@ class PelangganController extends Controller
                 'email' => $request->input('email'),
             ]);
 
+            Log::info('Pelanggan berhasil ditambahkan', $request->all());
+
             return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan.');
         } catch (\Exception $e) {
+            Log::error('Gagal menambahkan pelanggan: ' . $e->getMessage());
+
             return redirect()->route('pelanggan.index')->with('error', 'Gagal menambahkan pelanggan: ' . $e->getMessage());
         }
     }
@@ -45,8 +50,13 @@ class PelangganController extends Controller
     {
         try {
             $pelanggan = Pelanggan::findOrFail($id);
+
+            Log::info('Menampilkan data pelanggan ID: ' . $id);
+
             return view('pelanggan.show', compact('pelanggan'));
         } catch (ModelNotFoundException $e) {
+            Log::error('Pelanggan tidak ditemukan saat show. ID: ' . $id);
+
             return redirect()->route('pelanggan.index')->with('error', 'Pelanggan tidak ditemukan.');
         }
     }
@@ -55,8 +65,13 @@ class PelangganController extends Controller
     {
         try {
             $pelanggan = Pelanggan::findOrFail($id);
+
+            Log::info('Mengedit data pelanggan ID: ' . $id);
+
             return view('pelanggan.edit', compact('pelanggan'));
         } catch (ModelNotFoundException $e) {
+            Log::error('Pelanggan tidak ditemukan saat edit. ID: ' . $id);
+
             return redirect()->route('pelanggan.index')->with('error', 'Pelanggan tidak ditemukan.');
         }
     }
@@ -78,10 +93,16 @@ class PelangganController extends Controller
                 'email' => $request->input('email'),
             ]);
 
+            Log::info('Pelanggan berhasil diperbarui ID: ' . $id, $request->all());
+
             return redirect()->route('pelanggan.show', $id)->with('success', 'Pelanggan berhasil diperbarui.');
         } catch (ModelNotFoundException $e) {
+            Log::error('Pelanggan tidak ditemukan saat update. ID: ' . $id);
+
             return redirect()->route('pelanggan.index')->with('error', 'Pelanggan tidak ditemukan.');
         } catch (\Exception $e) {
+            Log::error('Gagal memperbarui pelanggan ID: ' . $id . ' | Error: ' . $e->getMessage());
+
             return redirect()->route('pelanggan.index')->with('error', 'Gagal memperbarui pelanggan: ' . $e->getMessage());
         }
     }
@@ -90,8 +111,13 @@ class PelangganController extends Controller
     {
         try {
             $pelanggan = Pelanggan::findOrFail($id);
+
+            Log::info('Menampilkan halaman konfirmasi hapus pelanggan ID: ' . $id);
+
             return view('pelanggan.delete', compact('pelanggan'));
         } catch (ModelNotFoundException $e) {
+            Log::error('Pelanggan tidak ditemukan saat delete. ID: ' . $id);
+
             return redirect()->route('pelanggan.index')->with('error', 'Pelanggan tidak ditemukan.');
         }
     }
@@ -102,10 +128,16 @@ class PelangganController extends Controller
             $pelanggan = Pelanggan::findOrFail($id);
             $pelanggan->delete();
 
+            Log::info('Pelanggan berhasil dihapus ID: ' . $id);
+
             return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil dihapus.');
         } catch (ModelNotFoundException $e) {
+            Log::error('Pelanggan tidak ditemukan saat destroy. ID: ' . $id);
+
             return redirect()->route('pelanggan.index')->with('error', 'Pelanggan tidak ditemukan.');
         } catch (\Exception $e) {
+            Log::error('Gagal menghapus pelanggan ID: ' . $id . ' | Error: ' . $e->getMessage());
+
             return redirect()->route('pelanggan.index')->with('error', 'Gagal menghapus pelanggan: ' . $e->getMessage());
         }
     }
