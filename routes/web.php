@@ -8,6 +8,7 @@ use App\Http\Controllers\DetailOrderController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\AuthController;
 
 
 
@@ -19,6 +20,11 @@ Route::get('/pendaftaran-ktp', function() {
 Route::get('/', function () {
     return view('home');
 });
+
+Route::get('/home', function () {
+    return view('dashboard'); // atau halaman dashboard kamu
+})->middleware('auth');
+
 
 // Route untuk pelanggan
 Route::resource('pelanggan', PelangganController::class);
@@ -48,6 +54,16 @@ Route::get('pembayaran/{id}/delete', [PembayaranController::class, 'delete'])->n
 Route::get('/upload', [ImageController::class, 'create']);
 Route::post('/upload', [ImageController::class, 'store'])->name('image.upload');
 Route::delete('/upload/{id}', [ImageController::class, 'destroy'])->name('image.delete');
+
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Dashboard / Home (setelah login)
+Route::get('/dashboard', function () {
+    return view('dashboard'); // Ganti dengan view kamu
+})->middleware('auth');
+
 
 
 
