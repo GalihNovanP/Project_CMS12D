@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DetailOrder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class DetailOrderController extends Controller
 {
-    // Menampilkan daftar semua detail order
     public function index()
     {
         return view('detail_order.index', [
@@ -15,13 +15,11 @@ class DetailOrderController extends Controller
         ]);
     }
 
-    // Menampilkan form tambah detail order
     public function create()
     {
         return view('detail_order.create');
     }
 
-    // Menyimpan detail order baru
     public function store(Request $request)
     {
         $request->validate([
@@ -31,31 +29,40 @@ class DetailOrderController extends Controller
             'harga_produk' => 'required|numeric',
         ]);
 
-        DetailOrder::create([
-            'id_order' => $request->input('id_order'),
-            'id_produk' => $request->input('id_produk'),
-            'jumlah_produk' => $request->input('jumlah_produk'),
-            'harga_produk' => $request->input('harga_produk'),
-        ]);
+        try {
+            DetailOrder::create([
+                'id_order' => $request->input('id_order'),
+                'id_produk' => $request->input('id_produk'),
+                'jumlah_produk' => $request->input('jumlah_produk'),
+                'harga_produk' => $request->input('harga_produk'),
+            ]);
 
-        return redirect()->route('detail_order.index');
+            return redirect()->route('detail_order.index')->with('success', 'Detail order berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()->route('detail_order.index')->with('error', 'Gagal menambahkan detail order: ' . $e->getMessage());
+        }
     }
 
-    // Menampilkan detail dari satu detail order
     public function show($id)
     {
-        $detail = DetailOrder::findOrFail($id);
-        return view('detail_order.show', compact('detail'));
+        try {
+            $detail = DetailOrder::findOrFail($id);
+            return view('detail_order.show', compact('detail'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('detail_order.index')->with('error', 'Detail order tidak ditemukan.');
+        }
     }
 
-    // Menampilkan form edit detail order
     public function edit($id)
     {
-        $detail = DetailOrder::findOrFail($id);
-        return view('detail_order.edit', compact('detail'));
+        try {
+            $detail = DetailOrder::findOrFail($id);
+            return view('detail_order.edit', compact('detail'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('detail_order.index')->with('error', 'Detail order tidak ditemukan.');
+        }
     }
 
-    // Memproses update detail order
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -65,31 +72,45 @@ class DetailOrderController extends Controller
             'harga_produk' => 'required|numeric',
         ]);
 
-        $detail = DetailOrder::findOrFail($id);
+        try {
+            $detail = DetailOrder::findOrFail($id);
 
-        $detail->update([
-            'id_order' => $request->input('id_order'),
-            'id_produk' => $request->input('id_produk'),
-            'jumlah_produk' => $request->input('jumlah_produk'),
-            'harga_produk' => $request->input('harga_produk'),
-        ]);
+            $detail->update([
+                'id_order' => $request->input('id_order'),
+                'id_produk' => $request->input('id_produk'),
+                'jumlah_produk' => $request->input('jumlah_produk'),
+                'harga_produk' => $request->input('harga_produk'),
+            ]);
 
-        return redirect()->route('detail_order.show', $id);
+            return redirect()->route('detail_order.show', $id)->with('success', 'Detail order berhasil diperbarui.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('detail_order.index')->with('error', 'Detail order tidak ditemukan.');
+        } catch (\Exception $e) {
+            return redirect()->route('detail_order.index')->with('error', 'Gagal memperbarui detail order: ' . $e->getMessage());
+        }
     }
 
-    // Menampilkan halaman konfirmasi hapus
     public function delete($id)
     {
-        $detail = DetailOrder::findOrFail($id);
-        return view('detail_order.delete', compact('detail'));
+        try {
+            $detail = DetailOrder::findOrFail($id);
+            return view('detail_order.delete', compact('detail'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('detail_order.index')->with('error', 'Detail order tidak ditemukan.');
+        }
     }
 
-    // Menghapus data detail order
     public function destroy($id)
     {
-        $detail = DetailOrder::findOrFail($id);
-        $detail->delete();
+        try {
+            $detail = DetailOrder::findOrFail($id);
+            $detail->delete();
 
-        return redirect()->route('detail_order.index');
+            return redirect()->route('detail_order.index')->with('success', 'Detail order berhasil dihapus.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('detail_order.index')->with('error', 'Detail order tidak ditemukan.');
+        } catch (\Exception $e) {
+            return redirect()->route('detail_order.index')->with('error', 'Gagal menghapus detail order: ' . $e->getMessage());
+        }
     }
 }

@@ -3,22 +3,34 @@
 @section('title', 'Daftar Order')
 
 @section('content')
-    <h1>Daftar Order</h1>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">Daftar Order</h1>
+        <a href="{{ route('order.create') }}" class="btn btn-primary">+ Tambah Order</a>
+    </div>
 
-    <ul>
-        @forelse($orders as $order)
-            <li>
-                <a href="/order/{{ $order->id }}">
-                    ID Order: {{ $order->id }}<br>
-                    Tanggal Order: {{ $order->tanggal_order }}<br>
-                    Jumlah Order: {{ $order->jumlah_order }}
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    @if($orders->isEmpty())
+        <div class="alert alert-info">Tidak ada order.</div>
+    @else
+        <div class="list-group">
+            @foreach($orders as $order)
+                <a href="{{ route('order.show', $order->id) }}" class="list-group-item list-group-item-action">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <strong>ID:</strong> {{ $order->id }}<br>
+                            <strong>Tanggal:</strong> {{ $order->tanggal_order }}
+                        </div>
+                        <div class="text-end">
+                            <strong>Jumlah:</strong> {{ $order->jumlah_order }}
+                        </div>
+                    </div>
                 </a>
-            </li>
-        @empty
-            <p>Tidak ada order.</p>
-        @endforelse
-    </ul>
-
-    <a href="/order/create" style="display: inline-block; margin-top: 20px;">+ Tambah Order</a>
-    <br><br>
+            @endforeach
+        </div>
+    @endif
+</div>
 @endsection

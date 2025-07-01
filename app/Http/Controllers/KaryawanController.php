@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Karyawan;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class KaryawanController extends Controller
 {
@@ -26,21 +27,32 @@ class KaryawanController extends Controller
             'jabatan_karyawan' => 'required|string',
         ]);
 
-        Karyawan::create($request->only('nama_karyawan', 'jabatan_karyawan'));
-
-        return redirect()->route('karyawan.index');
+        try {
+            Karyawan::create($request->only('nama_karyawan', 'jabatan_karyawan'));
+            return redirect()->route('karyawan.index')->with('success', 'Karyawan berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()->route('karyawan.index')->with('error', 'Gagal menambahkan karyawan: ' . $e->getMessage());
+        }
     }
 
     public function show($id)
     {
-        $karyawan = Karyawan::findOrFail($id);
-        return view('karyawan.show', compact('karyawan'));
+        try {
+            $karyawan = Karyawan::findOrFail($id);
+            return view('karyawan.show', compact('karyawan'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('karyawan.index')->with('error', 'Karyawan tidak ditemukan.');
+        }
     }
 
     public function edit($id)
     {
-        $karyawan = Karyawan::findOrFail($id);
-        return view('karyawan.edit', compact('karyawan'));
+        try {
+            $karyawan = Karyawan::findOrFail($id);
+            return view('karyawan.edit', compact('karyawan'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('karyawan.index')->with('error', 'Karyawan tidak ditemukan.');
+        }
     }
 
     public function update(Request $request, $id)
@@ -50,21 +62,37 @@ class KaryawanController extends Controller
             'jabatan_karyawan' => 'required|string',
         ]);
 
-        $karyawan = Karyawan::findOrFail($id);
-        $karyawan->update($request->only('nama_karyawan', 'jabatan_karyawan'));
-
-        return redirect()->route('karyawan.show', $id);
+        try {
+            $karyawan = Karyawan::findOrFail($id);
+            $karyawan->update($request->only('nama_karyawan', 'jabatan_karyawan'));
+            return redirect()->route('karyawan.show', $id)->with('success', 'Karyawan berhasil diperbarui.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('karyawan.index')->with('error', 'Karyawan tidak ditemukan.');
+        } catch (\Exception $e) {
+            return redirect()->route('karyawan.index')->with('error', 'Gagal memperbarui karyawan: ' . $e->getMessage());
+        }
     }
 
     public function delete($id)
     {
-        $karyawan = Karyawan::findOrFail($id);
-        return view('karyawan.delete', compact('karyawan'));
+        try {
+            $karyawan = Karyawan::findOrFail($id);
+            return view('karyawan.delete', compact('karyawan'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('karyawan.index')->with('error', 'Karyawan tidak ditemukan.');
+        }
     }
 
     public function destroy($id)
     {
-        Karyawan::destroy($id);
-        return redirect()->route('karyawan.index');
+        try {
+            $karyawan = Karyawan::findOrFail($id);
+            $karyawan->delete();
+            return redirect()->route('karyawan.index')->with('success', 'Karyawan berhasil dihapus.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('karyawan.index')->with('error', 'Karyawan tidak ditemukan.');
+        } catch (\Exception $e) {
+            return redirect()->route('karyawan.index')->with('error', 'Gagal menghapus karyawan: ' . $e->getMessage());
+        }
     }
 }

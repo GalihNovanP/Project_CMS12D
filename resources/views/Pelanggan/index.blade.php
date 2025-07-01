@@ -6,21 +6,25 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="fw-bold">Daftar Pelanggan</h1>
-        <a href="/" class="btn btn-outline-primary">Home</a>
+        <a href="{{ route('pelanggan.create') }}" class="btn btn-primary">+ Tambah Pelanggan</a>
     </div>
 
-    <ul class="list-group mb-4">
-        @forelse($pelanggans as $p)
-            <li class="list-group-item">
-                <a href="/pelanggan/{{ $p->id }}" class="text-decoration-none">
-                    {{ $p->nama }}
-                </a>
-            </li>
-        @empty
-            <li class="list-group-item text-muted">Tidak ada pelanggan.</li>
-        @endforelse
-    </ul>
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
-    <a href="/pelanggan/create" class="btn btn-primary">+ Tambah Pelanggan</a>
+    @if($pelanggans->isEmpty())
+        <div class="alert alert-info">Tidak ada pelanggan.</div>
+    @else
+        <ul class="list-group">
+            @foreach($pelanggans as $p)
+                <li class="list-group-item">
+                    <a href="{{ route('pelanggan.show', $p->id) }}" class="text-decoration-none">
+                        {{ $p->nama }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    @endif
 </div>
 @endsection

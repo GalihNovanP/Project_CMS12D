@@ -8,9 +8,6 @@
         <h1 class="fw-bold">Daftar Produk</h1>
         <a href="{{ route('produk.create') }}" class="btn btn-primary">+ Tambah Produk</a>
     </div>
-    @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
 
 @if(session('error'))
     <div class="alert alert-danger">{{ session('error') }}</div>

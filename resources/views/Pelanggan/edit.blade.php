@@ -4,7 +4,18 @@
 
 @section('content')
 <div class="container mt-5">
-    <h1 class="mb-4">Edit Pelanggan</h1>
+    <h2 class="mb-4">Edit Data Pelanggan</h2>
+
+    {{-- Tampilkan pesan error jika ada --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <form method="POST" action="{{ route('pelanggan.update', $pelanggan->id) }}">
         @csrf
@@ -12,20 +23,32 @@
 
         <div class="mb-3">
             <label for="nama" class="form-label">Nama</label>
-            <input type="text" class="form-control" id="nama" name="nama" value="{{ $pelanggan->nama }}" required>
+            <input type="text" class="form-control @error('nama') is-invalid @enderror" 
+                   id="nama" name="nama" value="{{ old('nama', $pelanggan->nama) }}" required>
+            @error('nama')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="mb-3">
             <label for="alamat" class="form-label">Alamat</label>
-            <input type="text" class="form-control" id="alamat" name="alamat" value="{{ $pelanggan->alamat }}" required>
+            <input type="text" class="form-control @error('alamat') is-invalid @enderror" 
+                   id="alamat" name="alamat" value="{{ old('alamat', $pelanggan->alamat) }}" required>
+            @error('alamat')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" value="{{ $pelanggan->email }}" required>
+            <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                   id="email" name="email" value="{{ old('email', $pelanggan->email) }}" required>
+            @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
-        <button type="submit" class="btn btn-primary">Simpan</button>
+        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
         <a href="{{ route('pelanggan.show', $pelanggan->id) }}" class="btn btn-secondary ms-2">← Kembali ke detail</a>
     </form>
 </div>

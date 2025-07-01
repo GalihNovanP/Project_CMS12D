@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pelanggan;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PelangganController extends Controller
 {
-    // Menampilkan daftar semua pelanggan
     public function index()
     {
         return view('pelanggan.index', [
@@ -15,13 +15,11 @@ class PelangganController extends Controller
         ]);
     }
 
-    // Menampilkan form tambah pelanggan
     public function create()
     {
         return view('pelanggan.create');
     }
 
-    // Menyimpan data pelanggan baru
     public function store(Request $request)
     {
         $request->validate([
@@ -30,30 +28,39 @@ class PelangganController extends Controller
             'email' => 'required|email|max:255',
         ]);
 
-        Pelanggan::create([
-            'nama' => $request->input('nama'),
-            'alamat' => $request->input('alamat'),
-            'email' => $request->input('email'),
-        ]);
+        try {
+            Pelanggan::create([
+                'nama' => $request->input('nama'),
+                'alamat' => $request->input('alamat'),
+                'email' => $request->input('email'),
+            ]);
 
-        return redirect()->route('pelanggan.index');
+            return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()->route('pelanggan.index')->with('error', 'Gagal menambahkan pelanggan: ' . $e->getMessage());
+        }
     }
 
-    // Menampilkan detail pelanggan
     public function show($id)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.show', compact('pelanggan'));
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
+            return view('pelanggan.show', compact('pelanggan'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('pelanggan.index')->with('error', 'Pelanggan tidak ditemukan.');
+        }
     }
 
-    // Menampilkan form edit pelanggan
     public function edit($id)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.edit', compact('pelanggan'));
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
+            return view('pelanggan.edit', compact('pelanggan'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('pelanggan.index')->with('error', 'Pelanggan tidak ditemukan.');
+        }
     }
 
-    // Memproses update data pelanggan
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -62,30 +69,44 @@ class PelangganController extends Controller
             'email' => 'required|email|max:255',
         ]);
 
-        $pelanggan = Pelanggan::findOrFail($id);
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
 
-        $pelanggan->update([
-            'nama' => $request->input('nama'),
-            'alamat' => $request->input('alamat'),
-            'email' => $request->input('email'),
-        ]);
+            $pelanggan->update([
+                'nama' => $request->input('nama'),
+                'alamat' => $request->input('alamat'),
+                'email' => $request->input('email'),
+            ]);
 
-        return redirect()->route('pelanggan.show', $id);
+            return redirect()->route('pelanggan.show', $id)->with('success', 'Pelanggan berhasil diperbarui.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('pelanggan.index')->with('error', 'Pelanggan tidak ditemukan.');
+        } catch (\Exception $e) {
+            return redirect()->route('pelanggan.index')->with('error', 'Gagal memperbarui pelanggan: ' . $e->getMessage());
+        }
     }
 
-    // Menampilkan halaman konfirmasi hapus
     public function delete($id)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        return view('pelanggan.delete', compact('pelanggan'));
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
+            return view('pelanggan.delete', compact('pelanggan'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('pelanggan.index')->with('error', 'Pelanggan tidak ditemukan.');
+        }
     }
 
-    // Menghapus data pelanggan
     public function destroy($id)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        $pelanggan->delete();
+        try {
+            $pelanggan = Pelanggan::findOrFail($id);
+            $pelanggan->delete();
 
-        return redirect()->route('pelanggan.index');
+            return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil dihapus.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('pelanggan.index')->with('error', 'Pelanggan tidak ditemukan.');
+        } catch (\Exception $e) {
+            return redirect()->route('pelanggan.index')->with('error', 'Gagal menghapus pelanggan: ' . $e->getMessage());
+        }
     }
 }

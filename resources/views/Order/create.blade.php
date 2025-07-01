@@ -3,20 +3,43 @@
 @section('title', 'Tambah Order')
 
 @section('content')
-    <h2 style="margin-bottom: 16px;">Tambah Order Baru</h2>
+<div class="container mt-5">
+    <h2 class="mb-4">Tambah Order Baru</h2>
 
-    <form method="POST" action="{{ route('order.store') }}" style="line-height: 2;">
+    {{-- Tampilkan semua pesan error --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('order.store') }}">
         @csrf
-        <label>Tanggal Order:
-            <input type="date" name="tanggal_order" required>
-        </label><br>
 
-        <label>Jumlah Order:
-            <input type="number" name="jumlah_order" required>
-        </label><br>
+        <div class="mb-3">
+            <label for="tanggal_order" class="form-label">Tanggal Order</label>
+            <input type="date" class="form-control @error('tanggal_order') is-invalid @enderror" 
+                   id="tanggal_order" name="tanggal_order" value="{{ old('tanggal_order') }}" required>
+            @error('tanggal_order')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
 
-        <button type="submit" style="margin-top: 10px;">Tambah</button>
+        <div class="mb-3">
+            <label for="jumlah_order" class="form-label">Jumlah Order</label>
+            <input type="number" class="form-control @error('jumlah_order') is-invalid @enderror" 
+                   id="jumlah_order" name="jumlah_order" value="{{ old('jumlah_order') }}" required min="1">
+            @error('jumlah_order')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <button type="submit" class="btn btn-primary">Tambah</button>
+        <a href="{{ route('order.index') }}" class="btn btn-secondary ms-2">← Kembali ke daftar</a>
     </form>
-
-    <a href="{{ route('order.index') }}" style="display: inline-block; margin-top: 20px;">← Kembali ke daftar</a>
+</div>
 @endsection

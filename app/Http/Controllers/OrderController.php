@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class OrderController extends Controller
 {
-    // Menampilkan daftar semua order
     public function index()
     {
         return view('order.index', [
@@ -15,13 +15,11 @@ class OrderController extends Controller
         ]);
     }
 
-    // Menampilkan form tambah order
     public function create()
     {
         return view('order.create');
     }
 
-    // Menyimpan data order baru
     public function store(Request $request)
     {
         $request->validate([
@@ -29,29 +27,38 @@ class OrderController extends Controller
             'jumlah_order' => 'required|integer',
         ]);
 
-        Order::create([
-            'tanggal_order' => $request->input('tanggal_order'),
-            'jumlah_order' => $request->input('jumlah_order'),
-        ]);
+        try {
+            Order::create([
+                'tanggal_order' => $request->input('tanggal_order'),
+                'jumlah_order' => $request->input('jumlah_order'),
+            ]);
 
-        return redirect()->route('order.index');
+            return redirect()->route('order.index')->with('success', 'Order berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()->route('order.index')->with('error', 'Gagal menambahkan order: ' . $e->getMessage());
+        }
     }
 
-    // Menampilkan detail order
     public function show($id)
     {
-        $order = Order::findOrFail($id);
-        return view('order.show', compact('order'));
+        try {
+            $order = Order::findOrFail($id);
+            return view('order.show', compact('order'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('order.index')->with('error', 'Order tidak ditemukan.');
+        }
     }
 
-    // Menampilkan form edit order
     public function edit($id)
     {
-        $order = Order::findOrFail($id);
-        return view('order.edit', compact('order'));
+        try {
+            $order = Order::findOrFail($id);
+            return view('order.edit', compact('order'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('order.index')->with('error', 'Order tidak ditemukan.');
+        }
     }
 
-    // Memproses update data order
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -59,29 +66,43 @@ class OrderController extends Controller
             'jumlah_order' => 'required|integer',
         ]);
 
-        $order = Order::findOrFail($id);
+        try {
+            $order = Order::findOrFail($id);
 
-        $order->update([
-            'tanggal_order' => $request->input('tanggal_order'),
-            'jumlah_order' => $request->input('jumlah_order'),
-        ]);
+            $order->update([
+                'tanggal_order' => $request->input('tanggal_order'),
+                'jumlah_order' => $request->input('jumlah_order'),
+            ]);
 
-        return redirect()->route('order.show', $id);
+            return redirect()->route('order.show', $id)->with('success', 'Order berhasil diperbarui.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('order.index')->with('error', 'Order tidak ditemukan.');
+        } catch (\Exception $e) {
+            return redirect()->route('order.index')->with('error', 'Gagal memperbarui order: ' . $e->getMessage());
+        }
     }
 
-    // Menampilkan halaman konfirmasi hapus
     public function delete($id)
     {
-        $order = Order::findOrFail($id);
-        return view('order.delete', compact('order'));
+        try {
+            $order = Order::findOrFail($id);
+            return view('order.delete', compact('order'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('order.index')->with('error', 'Order tidak ditemukan.');
+        }
     }
 
-    // Menghapus data order
     public function destroy($id)
     {
-        $order = Order::findOrFail($id);
-        $order->delete();
+        try {
+            $order = Order::findOrFail($id);
+            $order->delete();
 
-        return redirect()->route('order.index');
+            return redirect()->route('order.index')->with('success', 'Order berhasil dihapus.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('order.index')->with('error', 'Order tidak ditemukan.');
+        } catch (\Exception $e) {
+            return redirect()->route('order.index')->with('error', 'Gagal menghapus order: ' . $e->getMessage());
+        }
     }
 }
