@@ -36,7 +36,7 @@ class PelangganController extends Controller
                 'email' => $request->input('email'),
             ]);
 
-            Log::info('Pelanggan berhasil ditambahkan', $request->all());
+            Log::info('Pelanggan telah ditambahkan', $request->all());
 
             return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan.');
         } catch (\Exception $e) {
